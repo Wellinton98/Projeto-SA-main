@@ -1,0 +1,34 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1976D2, #911f1f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(249, 248, 248, 0.1);
+    text-align: center;
+}
+
+h1 {
+    color: #eaf1ec;
+    margin-bottom: 20px;
+}
+
+a {
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
