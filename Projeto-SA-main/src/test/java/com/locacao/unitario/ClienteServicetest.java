@@ -1,4 +1,4 @@
-package com.locacao;
+package com.locacao.unitario;
 
 import java.util.Optional;
 
