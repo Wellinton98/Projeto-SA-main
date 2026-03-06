@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.locacao.dto.ClienteRequestDTO;
 import com.locacao.model.Cliente;
 import com.locacao.service.ClienteService;
 
@@ -33,13 +34,13 @@ public class ClienteController {
     }
 
     @PostMapping
-    public Cliente salvar(@RequestBody Cliente cliente) {
-        return clienteService.salvar(cliente);
+    public Cliente salvar(@RequestBody ClienteRequestDTO dto) {
+        return clienteService.salvar(dto);
     }
 
     @PutMapping("/{id}")
-    public Cliente atualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
-        return clienteService.atualizar(id, cliente);
+    public Cliente atualizar(@PathVariable Integer id, @RequestBody ClienteRequestDTO dto) {
+        return clienteService.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")

@@ -1,6 +1,6 @@
 package com.locacao.dto;
 
-public record ClienteRequesteDTO(
+public record ClienteRequestDTO(
     Long id,
     String nome,
     String cpf,

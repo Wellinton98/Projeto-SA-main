@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.locacao.model.Imovel;
-import com.locacao.repository.ImovelRepository;
 import com.locacao.service.ImovelService;
 
 @Controller
@@ -28,84 +27,61 @@ public class ImovelController {
     @Autowired
     private ImovelService imovelService;
 
+    // FORMULÁRIO
     @GetMapping("/novo")
     public String novoImovel(Model model) {
         model.addAttribute("imovel", new Imovel());
         return "cadastro-imovel";
     }
 
+    // SALVAR
     @PostMapping("/salvar")
-public String salvar(@ModelAttribute Imovel imovel,
-                     @RequestParam("arquivoFoto") MultipartFile arquivo,
-                     @RequestParam("arquivoContrato") MultipartFile arquivoContrato) {
+    public String salvar(@ModelAttribute Imovel imovel,
+                         @RequestParam("arquivoFoto") MultipartFile arquivo,
+                         @RequestParam("arquivoContrato") MultipartFile arquivoContrato) {
 
-    try {
+        try {
 
-        if (!arquivo.isEmpty()) {
-            String nomeArquivo = System.currentTimeMillis() + "_" + arquivo.getOriginalFilename();
-            Path caminho = Paths.get("src/main/resources/static/uploads/" + nomeArquivo);
-            Files.write(caminho, arquivo.getBytes());
-            imovel.setFoto(nomeArquivo);
+            if (!arquivo.isEmpty()) {
+                String nomeArquivo = System.currentTimeMillis() + "_" + arquivo.getOriginalFilename();
+                Path caminho = Paths.get("src/main/resources/static/uploads/" + nomeArquivo);
+                Files.write(caminho, arquivo.getBytes());
+                imovel.setFoto(nomeArquivo);
+            }
+
+            if (!arquivoContrato.isEmpty()) {
+                String nomeContrato = System.currentTimeMillis() + "_" + arquivoContrato.getOriginalFilename();
+                Path caminhoContrato = Paths.get("src/main/resources/static/uploads/" + nomeContrato);
+                Files.write(caminhoContrato, arquivoContrato.getBytes());
+            }
+
+            imovelService.salvar(imovel);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        // Se quiser salvar contrato também
-        if (!arquivoContrato.isEmpty()) {
-            String nomeContrato = System.currentTimeMillis() + "_" + arquivoContrato.getOriginalFilename();
-            Path caminhoContrato = Paths.get("src/main/resources/static/uploads/" + nomeContrato);
-            Files.write(caminhoContrato, arquivoContrato.getBytes());
-            // depois você pode criar campo contrato na entidade
-        }
-
-        imovelService.salvar(imovel);
-
-    } catch (IOException e) {
-        e.printStackTrace();
+        return "redirect:/imoveis/salvar-com-sucesso";
     }
 
-    return "redirect:/imoveis/salvar-com-sucesso";
-}
-
+    // TELA DE SUCESSO
     @GetMapping("/salvar-com-sucesso")
     public String salvarComSucesso() {
         return "salvar-com-sucesso";
     }
-   @GetMapping
-public String listar(Model model) {
-    List<Imovel> lista = imovelService.listarTodos();
-    model.addAttribute("imoveis", lista);
-    return "lista-imoveis";
 
+    // LISTAR IMÓVEIS
+    @GetMapping
+    public String listar(Model model) {
+        List<Imovel> lista = imovelService.listarTodos();
+        model.addAttribute("imoveis", lista);
+        return "lista-imoveis";
     }
+
+    // EXCLUIR
     @GetMapping("/excluir/{id}")
-public String excluir(@PathVariable Integer id) {
-    imovelService.excluir(id);
-    return "redirect:/imoveis";
-}
-@GetMapping("/imoveis/novo")
-public String novo(Imovel imovel) {
-    return "imoveis/novo"; // mostra o formulário
-}
-
-@PostMapping("/imoveis")
-public String salvar(@ModelAttribute Imovel imovel) {
-    imovelRepository.save(imovel); // salva no banco
-    return "redirect:/imoveis";
-}
-@GetMapping("/imoveis")
-public String listarImoveis(Model model) {
-    List<Imovel> todosImoveis = imovelRepository.findAll();
-
-    List<Imovel> alugueis = todosImoveis.stream()
-                                        .filter(i -> "Alugar".equalsIgnoreCase(i.getNegocio()))
-                                        .toList();
-
-    List<Imovel> vendas = todosImoveis.stream()
-                                      .filter(i -> "Vender".equalsIgnoreCase(i.getNegocio()))
-                                      .toList();
-
-    model.addAttribute("alugueis", alugueis);
-    model.addAttribute("vendas", vendas);
-
-    return "imoveis/lista-imoveis"; // template correto
-}
+    public String excluir(@PathVariable Integer id) {
+        imovelService.excluir(id);
+        return "redirect:/imoveis";
+    }
 }
