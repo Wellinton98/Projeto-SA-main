@@ -49,5 +49,9 @@ public class ImovelService {
     @Column(name = "foto")
     private String foto;
 
+    public void excluir(Integer id) {
+    imovelRepository.deleteById(id);
+
+    }
 }
 

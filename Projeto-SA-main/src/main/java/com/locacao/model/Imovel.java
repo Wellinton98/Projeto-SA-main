@@ -23,14 +23,15 @@ public class Imovel {
     private Boolean disponivel;
     private String descricao;
     private String valorAluguel;
+    private String foto;
 
-    private String foto; // ✅ AGORA SIM existe o campo
+    private String negocio; // ✅ Alugar ou Comprar
 
     @Override
     public String toString() {
         return "Imovel [idImovel=" + idImovel + ", endereco=" + endereco + ", tipo=" + tipo + ", quartos=" + quartos
                 + ", banheiros=" + banheiros + ", vagas=" + vagas + ", mobilia=" + mobilia + ", disponivel="
-                + disponivel + ", descricao=" + descricao + ", valorAluguel=" + valorAluguel + ", foto=" + foto + "]";
+                + disponivel + ", descricao=" + descricao + ", valorAluguel=" + valorAluguel + ", foto=" + foto
+                + ", negocio=" + negocio + "]";
     }
-
 }

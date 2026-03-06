@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* TOPO */
+.topo {
+    text-align: center;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+.logo {
+    height: 80px;
+}
+
+/* BARRA VERMELHA */
+.barra-contato {
+    background: #484373;
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 40px;
+}
+
+/* BANNER */
+.banner {
+    height: 400px;
+    background: url('/img/painel.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.overlay h1 {
+    font-size: 40px;
+}
+
+.botoes {
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 25px;
+    background: #50488f;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    margin: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #900000;
+}
+
+/* BUSCA */
+.busca {
+    padding: 40px;
+    text-align: center;
+    background: #f5f5f5;
+}
+
+.filtros {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+select {
+    padding: 10px;
+    width: 180px;
+}
+
+.btn-buscar {
+    padding: 10px 20px;
+    background: #c40000;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-buscar:hover {
+    background: #900000;
+}
+.banner {
+  background: url('/img/banner.jpg') no-repeat center center;
+  background-size: cover;
+  height: 400px;
+  position: relative;
+}
+.titulo-site {
+  font-family: 'Times New Roman', Times, serif;  /* Fonte elegante */
+  font-size: 1.5+8rem;             /* Tamanho grande */
+  color: #4b4dca;                /* Vermelho vinho */
+  text-transform: uppercase;     /* Deixar em maiúsculas */
+  letter-spacing: 10px;           /* Espaçamento entre letras */
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* Sombra suave */
+  font-weight: lighter;
+  margin: 0px 0;
+  text-align: center;
+}

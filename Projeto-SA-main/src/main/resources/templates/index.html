@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wellinton Imobiliária</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<!-- TOPO COM LOGO E NOME -->
+<header class="topo">
+    <h1 class="titulo-site">Wellinton Imobiliária</h1>
+</header>
+
+<!-- BARRA VERMELHA -->
+<div class="barra-contato">
+    <span>📞 Contato: (91) 992859742 </span>
+</div>
+
+<!-- BANNER PRINCIPAL -->
+<section class="banner">
+    <div class="overlay">
+        <h1>Seu próximo imóvel está aqui</h1>
+        <p>Temos a opção perfeita para você</p>
+        <img src="foto.png.png" alt="">
+        <div class="botoes">
+            <a th:href="@{/imoveis/novo}" class="btn">Cadastrar Imóvel</a>
+            <a th:href="@{/imoveis}" class="btn">Ver Imóveis</a>
+        </div>
+    </div>
+</section>
+
+<!-- BUSCA SIMULADA -->
+<section class="busca">
+    <h2>Buscar Imóveis</h2>
+    <form th:action="@{/imoveis}" method="get">
+        <div class="filtros">
+            <label for="negocio">Negócio</label>
+            <select name="negocio" id="negocio">
+                <option value="">Selecione</option>
+                <option value="Alugar">Alugar</option>
+                <option value="Comprar">Comprar</option>
+            </select>
+
+            <select name="tipo">
+                <option value="">Tipo</option>
+                <option value="Casa">Casa</option>
+                <option value="Apartamento">Apartamento</option>
+                <option value="Kitnet">Kitnet</option>
+            </select>
+
+            <select name="cidade">
+                <option value="">Cidade</option>
+                <option value="Rodeio">Rodeio</option>
+                <option value="Ascurra">Ascurra</option>
+                <option value="Timbó">Timbó</option>
+            </select>
+
+            <button type="submit" class="btn-buscar">Buscar</button>
+        </div>
+    </form>
+</section>
+
+</body>
+</html>

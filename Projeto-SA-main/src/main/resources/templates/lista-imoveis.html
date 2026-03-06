@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Imóveis</title>
+    <link rel="stylesheet" th:href="@{/css/lista-imoveis.css}">
+</head>
+<body>
+
+<header>
+    <h1>🏠 Imóveis Disponíveis</h1>
+    <a th:href="@{/}" class="btn-voltar">⬅ Início</a>
+</header>
+
+<div class="container">
+    <div class="grid">
+
+        <div class="card" th:each="imovel : ${imoveis}">
+
+            <!-- Imagem -->
+            <img th:if="${imovel.foto != null}"
+                 th:src="@{'/uploads/' + ${imovel.foto}}"
+                 alt="Imagem do imóvel">
+
+            <!-- Conteúdo -->
+            <div class="card-body">
+                <h3 th:text="${imovel.tipo}"></h3>
+
+                <p><strong>Endereço:</strong>
+                   <span th:text="${imovel.endereco}"></span>
+                </p>
+
+                <p th:text="${imovel.descricao}"></p>
+
+                <p>
+                    🛏 <span th:text="${imovel.quartos}"></span> |
+                    🚿 <span th:text="${imovel.banheiros}"></span> |
+                    🚗 <span th:text="${imovel.vagas}"></span>
+                </p>
+
+                <p class="valor"
+                   th:text="'R$ ' + ${imovel.valorAluguel}">
+                </p>
+
+                <p th:if="${imovel.disponivel}" style="color: green;">
+                    Disponível
+                </p>
+
+                <p th:if="${!imovel.disponivel}" style="color: red;">
+                    Indisponível
+                </p>
+                <a th:href="@{/imoveis/excluir/{id}(id=${imovel.idImovel})}"
+   class="btn-excluir"
+   onclick="return confirm('Tem certeza que deseja excluir?')">
+   ❌ Excluir
+</a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -4,18 +4,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.locacao.model.Imovel;
+import com.locacao.repository.ImovelRepository;
 import com.locacao.service.ImovelService;
 
 @Controller
@@ -66,4 +69,43 @@ public String salvar(@ModelAttribute Imovel imovel,
     public String salvarComSucesso() {
         return "salvar-com-sucesso";
     }
+   @GetMapping
+public String listar(Model model) {
+    List<Imovel> lista = imovelService.listarTodos();
+    model.addAttribute("imoveis", lista);
+    return "lista-imoveis";
+
+    }
+    @GetMapping("/excluir/{id}")
+public String excluir(@PathVariable Integer id) {
+    imovelService.excluir(id);
+    return "redirect:/imoveis";
+}
+@GetMapping("/imoveis/novo")
+public String novo(Imovel imovel) {
+    return "imoveis/novo"; // mostra o formulário
+}
+
+@PostMapping("/imoveis")
+public String salvar(@ModelAttribute Imovel imovel) {
+    imovelRepository.save(imovel); // salva no banco
+    return "redirect:/imoveis";
+}
+@GetMapping("/imoveis")
+public String listarImoveis(Model model) {
+    List<Imovel> todosImoveis = imovelRepository.findAll();
+
+    List<Imovel> alugueis = todosImoveis.stream()
+                                        .filter(i -> "Alugar".equalsIgnoreCase(i.getNegocio()))
+                                        .toList();
+
+    List<Imovel> vendas = todosImoveis.stream()
+                                      .filter(i -> "Vender".equalsIgnoreCase(i.getNegocio()))
+                                      .toList();
+
+    model.addAttribute("alugueis", alugueis);
+    model.addAttribute("vendas", vendas);
+
+    return "imoveis/lista-imoveis"; // template correto
+}
 }

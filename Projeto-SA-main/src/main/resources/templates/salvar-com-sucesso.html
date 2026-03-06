@@ -8,10 +8,16 @@
 <body>
 
 <div class="container">
-    <h1>Imóvel salvo com sucesso!✅</h1>
-    <a href="/imoveis/novo">Cadastrar outro</a>
+    <div class="card">
+        <div class="icon">🏠</div>
+        <h1>Imóvel cadastrado com sucesso!</h1>
+        <p>O imóvel foi salvo no sistema da imobiliária.</p>
 
+        <div class="buttons">
+            <a href="/imoveis/novo" class="btn-primary">Cadastrar outro</a>
+            <a th:href="@{/imoveis}">Ver imóveis</a>        </div>
+    </div>
 </div>
-        
+
 </body>
 </html>

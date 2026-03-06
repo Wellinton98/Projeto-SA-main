@@ -1,0 +1,136 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f9;
+}
+
+/* Cabeçalho */
+header {
+    background: linear-gradient(90deg, #0D47A1, #1565C0);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Container principal */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+/* Grid de imóveis */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Card */
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+/* Imagem */
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Conteúdo */
+.card-body {
+    padding: 20px;
+}
+
+.card-body h3 {
+    margin: 0;
+    color: #0D47A1;
+}
+
+.card-body p {
+    color: #555;
+    margin: 8px 0;
+}
+
+/* Valor */
+.valor {
+    font-weight: bold;
+    font-size: 18px;
+    color: #2E7D32;
+}
+
+/* Botão */
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    background: #0D47A1;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #08306b;
+}
+header {
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.btn-excluir {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background: #ff4d4d;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-excluir:hover {
+    background: #cc0000;
+}
+.btn-voltar{
+display: inline-flex;
+margin-bottom: auto;
+padding: 2px 8px;
+background: rgb(200, 200, 178);
+color: #f4f6f9;
+text-decoration: none;
+border-radius: 3px;
+font-size: 20px;
+
+}
+/* Card de detalhes */
+.card-detalhe {
+    max-width: 700px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card-detalhe img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.card-detalhe .card-body {
+    padding: 20px;
+}
