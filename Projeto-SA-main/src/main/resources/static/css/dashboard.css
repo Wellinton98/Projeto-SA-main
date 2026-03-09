@@ -113,3 +113,43 @@ select {
   margin: 0px 0;
   text-align: center;
 }
+.banner {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-banner img {
+    width: 300px;
+    margin: 20px 0;
+}
+
+.botoes {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+.titulo-banner{
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.titulo-banner::after{
+    content: "";
+    display: block;
+    width: 1900px;
+    height: 4px;
+    background-color: red;
+    margin: 10px auto;
+}
+.banner{
+    text-align: center;
+    padding: 40px;
+}

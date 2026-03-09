@@ -14,19 +14,25 @@
 
 <!-- BARRA VERMELHA -->
 <div class="barra-contato">
-    <span>📞 Contato: (91) 992859742 </span>
+    <span>📞 Contato: (91) 992859742</span>
 </div>
 
 <!-- BANNER PRINCIPAL -->
 <section class="banner">
     <div class="overlay">
-        <h1>Seu próximo imóvel está aqui</h1>
+
+<h2 class="titulo-banner">Seu próximo imóvel está aqui</h2>
+        <div class="logo-banner">
+            <img th:src="@{/images/foto.png}" alt="Logo da Imobiliária">
+        </div>
+
         <p>Temos a opção perfeita para você</p>
-        <img src="foto.png.png" alt="">
+
         <div class="botoes">
             <a th:href="@{/imoveis/novo}" class="btn">Cadastrar Imóvel</a>
             <a th:href="@{/imoveis}" class="btn">Ver Imóveis</a>
         </div>
+
     </div>
 </section>
 
@@ -35,6 +41,7 @@
     <h2>Buscar Imóveis</h2>
     <form th:action="@{/imoveis}" method="get">
         <div class="filtros">
+
             <label for="negocio">Negócio</label>
             <select name="negocio" id="negocio">
                 <option value="">Selecione</option>
@@ -57,6 +64,7 @@
             </select>
 
             <button type="submit" class="btn-buscar">Buscar</button>
+
         </div>
     </form>
 </section>
