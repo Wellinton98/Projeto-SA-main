@@ -36,7 +36,7 @@ public class ClienteServiceIntegrationTest {
         List<Cliente> clientes =
                 clienteService.listarTodos();
 
-        // ---------- Assert
+        //  Assert
         assertNotNull(clientes);
         assertFalse(clientes.isEmpty());
     }
