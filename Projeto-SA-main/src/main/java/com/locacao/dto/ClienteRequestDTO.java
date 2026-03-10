@@ -1,7 +1,7 @@
 package com.locacao.dto;
 
 public record ClienteRequestDTO(
-    Long id,
+    Integer id,
     String nome,
     String cpf,
     String email,

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.locacao.dto.ClienteRequestDTO;
 import com.locacao.model.Cliente;
 import com.locacao.service.ClienteService;
 
@@ -26,17 +27,14 @@ public class ClienteServiceIntegrationTest {
     public void listarClientes() {
 
         // Arrange 
-        Cliente cliente = new Cliente();
-        cliente.setNome("Wellinton");
-        cliente.setEmail("wellinton@email.com");
-
+        ClienteRequestDTO cliente = new ClienteRequestDTO(null, "Wellinton", "057.524.090-39", "wellinton@gmail.com", "47988775543", "Rua Bahia, Bairro Arapongas");
         clienteService.salvar(cliente);
 
         //  Act 
         List<Cliente> clientes =
                 clienteService.listarTodos();
 
-        // ---------- Assert
+        // Assert
         assertNotNull(clientes);
         assertFalse(clientes.isEmpty());
     }
