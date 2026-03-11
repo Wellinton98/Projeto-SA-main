@@ -43,7 +43,7 @@ class ClienteServicetest {
         when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
         // Act — chamando o service
-        Cliente resultado = clienteService.salvar(clienteDTO);
+        Cliente resultado = clienteService.salvar(cliente);
 
         // Assert
         assertNotNull(resultado); // Verifica se o resultado não é nulo
