@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.locacao.dto.ClienteRequestDTO;
+import com.locacao.dto.ClienteResponseDTO;
 import com.locacao.model.Cliente;
 import com.locacao.repository.ClienteRepository;
 import com.locacao.service.ClienteService;
@@ -43,7 +44,7 @@ class ClienteServicetest {
         when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
         // Act — chamando o service
-        Cliente resultado = clienteService.salvar(cliente);
+        ClienteResponseDTO resultado = clienteService.salvar(clienteDTO);
 
         // Assert
         assertNotNull(resultado); // Verifica se o resultado não é nulo
@@ -54,9 +55,7 @@ class ClienteServicetest {
         assertEquals("joao@gmail.com", resultado.getEmail()); // Verifica o email
         assertEquals("11999999999", resultado.getTelefone()); // Verifica o telefone
 
-        // Verifica se o repositório foi chamado corretamente
- //   verify(clienteRepository, times(1)).save(cliente);    
-
+        
 }
 /* 
    @Test

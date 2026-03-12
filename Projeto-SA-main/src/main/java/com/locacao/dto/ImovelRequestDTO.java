@@ -1,6 +1,6 @@
 package com.locacao.dto;
 
-public record ImovelRequesteDTO(
+public record ImovelRequestDTO(
     Long id,
     String endereco,
     String tipo,

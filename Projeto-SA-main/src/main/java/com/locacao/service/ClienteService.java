@@ -48,13 +48,13 @@ public class ClienteService {
         return conversorClienteParaDto(clienteBuscado);
     }
 
-    public ClienteResponseDTO salvar(ClienteRequestDTO dto) {
+    public ClienteResponseDTO salvar(Cliente cliente2) {
         Cliente cliente = new Cliente();
-        cliente.setNome(dto.nome());
-        cliente.setCpf(dto.cpf());
-        cliente.setEmail(dto.email());
-        cliente.setTelefone(dto.telefone());
-        cliente.setEndereco(dto.endereco());
+        cliente.setNome(cliente2.nome());
+        cliente.setCpf(cliente2.cpf());
+        cliente.setEmail(cliente2.email());
+        cliente.setTelefone(cliente2.telefone());
+        cliente.setEndereco(cliente2.endereco());
 
         Cliente clienteSalvado = clienteRepository.save(cliente);
 

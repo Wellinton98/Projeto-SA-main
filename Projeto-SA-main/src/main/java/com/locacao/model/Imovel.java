@@ -34,4 +34,9 @@ public class Imovel {
                 + disponivel + ", descricao=" + descricao + ", valorAluguel=" + valorAluguel + ", foto=" + foto
                 + ", negocio=" + negocio + "]";
     }
+
+    public Object getId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    }
 }

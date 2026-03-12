@@ -35,7 +35,7 @@ public class ClienteController {
 
     @PostMapping
     public ClienteResponseDTO salvar(@RequestBody ClienteRequestDTO dto) {
-        return clienteService.salvar(dto);
+        return ClienteRequestDTO.salvar(dto);
     }
 
     @PutMapping("/{id}")

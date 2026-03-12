@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.locacao.dto.ImovelRequestDTO;
 import com.locacao.model.Imovel;
 import com.locacao.service.ImovelService;
 
@@ -27,14 +28,14 @@ public class ImovelController {
     @Autowired
     private ImovelService imovelService;
 
-    // FORMULÁRIO
+    // formulário
     @GetMapping("/novo")
     public String novoImovel(Model model) {
         model.addAttribute("imovel", new Imovel());
         return "cadastro-imovel";
     }
 
-    // SALVAR
+    // salvar
     @PostMapping("/salvar")
     public String salvar(@ModelAttribute Imovel imovel,
                          @RequestParam("arquivoFoto") MultipartFile arquivo,
@@ -55,8 +56,6 @@ public class ImovelController {
                 Files.write(caminhoContrato, arquivoContrato.getBytes());
             }
 
-            imovelService.salvar(imovel);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,21 +63,21 @@ public class ImovelController {
         return "redirect:/imoveis/salvar-com-sucesso";
     }
 
-    // TELA DE SUCESSO
+    // salva com sucesso
     @GetMapping("/salvar-com-sucesso")
     public String salvarComSucesso() {
         return "salvar-com-sucesso";
     }
 
-    // LISTAR IMÓVEIS
+    // listar imoveis
     @GetMapping
     public String listar(Model model) {
-        List<Imovel> lista = imovelService.listarTodos();
+        List<ImovelRequestDTO> lista = imovelService.listarTodos();
         model.addAttribute("imoveis", lista);
         return "lista-imoveis";
     }
 
-    // EXCLUIR
+    // excluir
     @GetMapping("/excluir/{id}")
     public String excluir(@PathVariable Integer id) {
         imovelService.excluir(id);
