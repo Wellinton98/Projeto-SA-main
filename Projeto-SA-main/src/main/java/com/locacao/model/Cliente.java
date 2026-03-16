@@ -32,7 +32,18 @@ public class Cliente {
     @Column(length = 20)
     private String telefone;
 
-   
+    public Cliente() {
+    }
+
+    public Cliente(String cpf, String email, String endereco, Integer idCliente, String nome, String telefone) {
+        this.cpf = cpf;
+        this.email = email;
+        this.endereco = endereco;
+        this.idCliente = idCliente;
+        this.nome = nome;
+        this.telefone = telefone;
+    }
+
     public Integer getIdCliente() {
         return idCliente;
     }

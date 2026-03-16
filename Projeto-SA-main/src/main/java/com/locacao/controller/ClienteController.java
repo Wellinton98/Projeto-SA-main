@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.locacao.dto.ClienteRequestDTO;
-import com.locacao.model.Cliente;
+import com.locacao.dto.ClienteResponseDTO;
 import com.locacao.service.ClienteService;
 
 @RestController
@@ -24,22 +24,22 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @GetMapping
-    public List<Cliente> listar() {
+    public List<ClienteResponseDTO> listar() {
         return clienteService.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public Cliente buscar(@PathVariable Integer id) {
+    public ClienteResponseDTO buscar(@PathVariable Integer id) {
         return clienteService.buscarPorId(id);
     }
 
     @PostMapping
-    public Cliente salvar(@RequestBody ClienteRequestDTO dto) {
-        return clienteService.salvar(dto);
+    public ClienteResponseDTO salvar(@RequestBody ClienteRequestDTO dto) {
+        return ClienteRequestDTO.salvar(dto);
     }
 
     @PutMapping("/{id}")
-    public Cliente atualizar(@PathVariable Integer id, @RequestBody ClienteRequestDTO dto) {
+    public ClienteResponseDTO atualizar(@PathVariable Integer id, @RequestBody ClienteRequestDTO dto) {
         return clienteService.atualizar(id, dto);
     }
 
