@@ -1,98 +1,125 @@
 package com.locacao.unitario;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.locacao.dto.ClienteRequestDTO;
-import com.locacao.dto.ClienteResponseDTO;
-import com.locacao.model.Cliente;
-import com.locacao.repository.ClienteRepository;
-import com.locacao.service.ClienteService;
+import com.locacao.dto.AluguelRequestDTO;
+import com.locacao.model.Aluguel;
+import com.locacao.repository.AluguelRepository;
+import com.locacao.service.AluguelService;
 
 @ExtendWith(MockitoExtension.class)
-class ClienteServicetest {
+public class ClienteServicetest {
 
     @Mock
-    private ClienteRepository clienteRepository;
+    private AluguelRepository aluguelRepository;
 
     @InjectMocks
-    private ClienteService clienteService;
+    private AluguelService aluguelService;
 
     @Test
-    void deveCriarNovoClienteComSucesso() {
+    @DisplayName("Deve salvar um aluguel com sucesso")
+    void testSalvarAluguel() {
+        // Arrange
+        AluguelRequestDTO dto = new AluguelRequestDTO(
+                1, 1,
+                LocalDate.now(),
+                LocalDate.now().plusMonths(1),
+                new BigDecimal("1200.00"),
+                true,
+                "Contrato teste",
+                "João Fiador",
+                "123.456.789-00",
+                new BigDecimal("100.00")
+        );
 
-        // Arrange — criando cliente enviado pelo usuário (sem ID ainda)
-        ClienteRequestDTO clienteDTO = new ClienteRequestDTO(1,"João Silva","12345678900","joao@gmail.com",
-        "11999999999","Rua A, 123");
-        
-        Cliente cliente = new Cliente();
-        cliente.setIdCliente(clienteDTO.id());
-        cliente.setNome(clienteDTO.nome());
-        cliente.setCpf(clienteDTO.cpf());
-        cliente.setEmail(clienteDTO.email());
-        cliente.setTelefone(clienteDTO.telefone());
-        cliente.setEndereco(clienteDTO.endereco());
+        Aluguel aluguelSalvo = new Aluguel();
+        aluguelSalvo.setIdAluguel(1);
+        aluguelSalvo.setDataInicio(dto.dataInicio());
+        aluguelSalvo.setDataFim(dto.dataFim());
+        aluguelSalvo.setValorMensal(dto.valorMensal());
 
-        // Mock do save()
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+        when(aluguelRepository.save(any(Aluguel.class))).thenReturn(aluguelSalvo);
 
-        // Act — chamando o service
-        ClienteResponseDTO resultado = clienteService.salvar(clienteDTO);
+        // Act
+        var resultado = aluguelService.salvar(dto);
 
         // Assert
-        assertNotNull(resultado); // Verifica se o resultado não é nulo
-        assertEquals(1, resultado.getIdCliente()); // Verifica se o ID foi atribuído
-        assertEquals("João Silva", resultado.getNome()); // Verifica o nome
-        assertEquals("12345678900", resultado.getCpf()); // Verifica o CPF
-        assertEquals("Rua A, 123", resultado.getEndereco()); // Verifica o endereço
-        assertEquals("joao@gmail.com", resultado.getEmail()); // Verifica o email
-        assertEquals("11999999999", resultado.getTelefone()); // Verifica o telefone
+        assertNotNull(resultado);
+        assertEquals(1, resultado.idAluguel());
+        assertEquals(dto.dataInicio(), resultado.dataInicio());
+        assertEquals(dto.valorMensal(), resultado.valorMensal());
 
-        // Verifica se o repositório foi chamado corretamente
- //   verify(clienteRepository, times(1)).save(cliente);    
-
-}
-/* 
-   @Test
-    void deveLancarExcecao_QuandoBuscarPorIdInexistente() {
-
-    Integer idInexistente = 999;
-
-    Mockito.when(clienteRepository.findById(idInexistente))
-            .thenReturn(Optional.empty());
-
-    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-        clienteService.buscarPorId(idInexistente);
-    });
-
-    assertEquals("Cliente com ID 999 não encontrado.", exception.getReason());
-
-    Mockito.verify(clienteRepository).findById(idInexistente);
-}
+        verify(aluguelRepository, times(1)).save(any(Aluguel.class));
+    }
 
     @Test
-    void deveDeletarClienteDoSistema() {
+    @DisplayName("Deve listar todos os aluguéis")
+    void testListarTodos() {
+        // Arrange
+        Aluguel aluguel1 = new Aluguel();
+        aluguel1.setIdAluguel(1);
+        Aluguel aluguel2 = new Aluguel();
+        aluguel2.setIdAluguel(2);
 
-        Integer idExistente = 1;
+        when(aluguelRepository.findAll()).thenReturn(List.of(aluguel1, aluguel2));
 
-        Mockito.when(clienteRepository.existsById(idExistente))
-                .thenReturn(true);
+        // Act
+        var lista = aluguelService.listarTodos();
 
-        clienteService.deletar(idExistente);
+        // Assert
+        assertNotNull(lista);
+        assertEquals(2, lista.size());
+        verify(aluguelRepository, times(1)).findAll();
+    }
 
-        Mockito.verify(clienteRepository, Mockito.times(1))
-                .deleteById(idExistente);
-}
+    @Test
+    @DisplayName("Deve verificar se o imóvel está disponível")
+    void testImovelDisponivel() {
+        // Arrange
+        when(aluguelRepository.verificarDisponibilidade(
+                anyInt(),
+                any(LocalDate.class),
+                any(LocalDate.class)
+        )).thenReturn(List.of()); // sem aluguéis conflitantes
+
+        // Act
+        boolean disponivel = aluguelService.imovelDisponivel(1, LocalDate.now(), LocalDate.now().plusDays(5));
+
+        // Assert
+        assertTrue(disponivel);
+        verify(aluguelRepository).verificarDisponibilidade(anyInt(), any(LocalDate.class), any(LocalDate.class));
+    }
+
+    @Test
+    @DisplayName("Deve retornar falso quando o imóvel não estiver disponível")
+    void testImovelIndisponivel() {
+        // Arrange
+        when(aluguelRepository.verificarDisponibilidade(
+                anyInt(),
+                any(LocalDate.class),
+                any(LocalDate.class)
+        )).thenReturn(List.of(new Aluguel())); // já existe aluguel nesse período
+
+        // Act
+        boolean disponivel = aluguelService.imovelDisponivel(1, LocalDate.now(), LocalDate.now().plusDays(5));
+
+        // Assert
+        assertFalse(disponivel);
+        verify(aluguelRepository).verificarDisponibilidade(anyInt(), any(LocalDate.class), any(LocalDate.class));
+    }
 }

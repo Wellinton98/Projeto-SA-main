@@ -1,75 +1,40 @@
 package com.locacao.service;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import com.locacao.dto.AluguelRequestDTO;
 import com.locacao.dto.AluguelResponseDTO;
 import com.locacao.model.Aluguel;
-import com.locacao.model.Cliente;
-import com.locacao.model.Imovel;
 import com.locacao.repository.AluguelRepository;
-import com.locacao.repository.ClienteRepository;
-import com.locacao.repository.ImovelRepository;
 
 @Service
 public class AluguelService {
 
-    private final AluguelRepository aluguelRepository;
-    private final ClienteRepository clienteRepository;
-    private final ImovelRepository imovelRepository;
+    private static final String CLIENTE_INDEFINIDO = "Sem cliente";
+    private static final String IMOVEL_INDEFINIDO = "Sem imóvel";
 
-    public AluguelService(AluguelRepository aluguelRepository,
-                          ClienteRepository clienteRepository,
-                          ImovelRepository imovelRepository) {
-        this.aluguelRepository = aluguelRepository;
-        this.clienteRepository = clienteRepository;
-        this.imovelRepository = imovelRepository;
-    }
+    @Autowired
+    private AluguelRepository aluguelRepository;
 
+    // Salvar um novo aluguel
     public AluguelResponseDTO salvar(AluguelRequestDTO dto) {
-        validarDatas(dto);
-
-        Cliente cliente = clienteRepository.findById(dto.idCliente())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
-
-        Imovel imovel = imovelRepository.findById(dto.idImovel())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Imóvel não encontrado"));
 
         Aluguel aluguel = new Aluguel();
-        aluguel.setCliente(cliente);
-        aluguel.setImovel(imovel);
         aluguel.setDataInicio(dto.dataInicio());
         aluguel.setDataFim(dto.dataFim());
         aluguel.setValorMensal(dto.valorMensal());
-        aluguel.setSeguroIncendio(dto.seguroIncendio());
-        aluguel.setContratoAluguel(dto.contratoAluguel());
-        aluguel.setNomeFiador(dto.nomeFiador());
-        aluguel.setCpfFiador(dto.cpfFiador());
-        aluguel.setValorSeguroIncendio(dto.valorSeguroIncendio());
 
-        return converter(aluguelRepository.save(aluguel));
+        Aluguel salvo = aluguelRepository.save(aluguel);
+
+        return converter(salvo);
     }
 
-    public AluguelResponseDTO atualizar(Integer id, AluguelRequestDTO dto) {
-        validarDatas(dto);
-
-        Aluguel aluguel = aluguelRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluguel não encontrado"));
-
-        aluguel.setDataInicio(dto.dataInicio());
-        aluguel.setDataFim(dto.dataFim());
-        aluguel.setValorMensal(dto.valorMensal());
-        aluguel.setSeguroIncendio(dto.seguroIncendio());
-        aluguel.setContratoAluguel(dto.contratoAluguel());
-        aluguel.setNomeFiador(dto.nomeFiador());
-        aluguel.setCpfFiador(dto.cpfFiador());
-        aluguel.setValorSeguroIncendio(dto.valorSeguroIncendio());
-
-        return converter(aluguelRepository.save(aluguel));
-    }
-
+    // Listar todos os alugueis
     public List<AluguelResponseDTO> listarTodos() {
         return aluguelRepository.findAll()
                 .stream()
@@ -77,37 +42,53 @@ public class AluguelService {
                 .toList();
     }
 
+    // Buscar aluguel por ID
     public AluguelResponseDTO buscarPorId(Integer id) {
+
         Aluguel aluguel = aluguelRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluguel não encontrado"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Aluguel com ID " + id + " não encontrado"));
+
         return converter(aluguel);
     }
 
+    // Deletar aluguel por ID
     public void deletar(Integer id) {
+
         if (!aluguelRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluguel não encontrado");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Aluguel não encontrado");
         }
+
         aluguelRepository.deleteById(id);
     }
 
+    // Conversão segura para DTO
     private AluguelResponseDTO converter(Aluguel aluguel) {
+        String nomeCliente = aluguel.getCliente() != null ? aluguel.getCliente().getNome() : CLIENTE_INDEFINIDO;
+        String enderecoImovel = aluguel.getImovel() != null ? aluguel.getImovel().getEndereco() : IMOVEL_INDEFINIDO;
+
         return new AluguelResponseDTO(
                 aluguel.getIdAluguel(),
-                aluguel.getCliente().getNome(),
-                aluguel.getImovel().getEndereco(),
+                nomeCliente,
+                enderecoImovel,
                 aluguel.getDataInicio(),
                 aluguel.getDataFim(),
-                aluguel.getValorMensal(),
-                aluguel.getSeguroIncendio(),
-                aluguel.getValorSeguroIncendio(),
-                aluguel.getNomeFiador(),
-                aluguel.getCpfFiador()
+                aluguel.getValorMensal()
         );
     }
+    public AluguelResponseDTO atualizar(Integer id, AluguelRequestDTO dto) {
 
-    private void validarDatas(AluguelRequestDTO dto) {
-        if (dto.dataFim().isBefore(dto.dataInicio())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data fim não pode ser anterior à data início");
-        }
+        Aluguel aluguelExistente = aluguelRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aluguel com ID " + id + " não encontrado"));
+
+      
+        Aluguel atualizado = aluguelRepository.save(aluguelExistente);
+        return converter(atualizado);
     }
 }

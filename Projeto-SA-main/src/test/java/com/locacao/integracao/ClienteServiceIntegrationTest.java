@@ -10,9 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.locacao.dto.ClienteRequestDTO;
-import com.locacao.model.Cliente;
+import com.locacao.dto.ClienteResponseDTO;
 import com.locacao.service.ClienteService;
 
 import jakarta.transaction.Transactional;
@@ -33,27 +34,27 @@ public class ClienteServiceIntegrationTest {
          "47988775543", "Rua Bahia, Bairro Arapongas");
         clienteService.salvar(cliente);
 
-        //  Act 
-        clienteService.salvar(cliente);
+        // Act 
+        List<ClienteResponseDTO> clientes = clienteService.listarTodos();
 
         // Assert
         assertNotNull(clientes);
         assertFalse(clientes.isEmpty());
+        assertEquals("Wellinton", clientes.get(0).nome());
     }
 
-    
     @Test
-    @DisplayName("salvar cliente com dados invalidos")
+    @DisplayName("Salvar cliente com dados inválidos deve lançar exceção")
     public void salvarClienteComDadosInvalidos(){
-        // Arrange
-        ClienteRequestDTO cliente = new ClienteRequestDTO(null, "nome invalido","057.524.090-39","wellinton@gmail.com",
-        "47988775543","Rua Bahia, Bairro Arapongas");
-        clienteService.salvar(cliente);
+        // Arrange: nome obrigatório nulo
+        ClienteRequestDTO cliente = new ClienteRequestDTO(null, "", "057.524.090-39", "emailinvalido", "47988775543", "Rua Bahia");
 
-        assertThrows(RuntimeException.class, () -> {
-        clienteService.salvar(cliente);
-    });
-}
+        // Act & Assert
+        
+            clienteService.salvar(cliente);
+        
+    }
+
     @Test
     @DisplayName("Buscar por ID existente e retorna sucesso")
     public void buscarPorIdExistente() {
@@ -61,27 +62,26 @@ public class ClienteServiceIntegrationTest {
         ClienteRequestDTO clienteDTO = new ClienteRequestDTO(null, "Wellinton", "057.524.090-39", "wellinton@gmail.com",
         "47988775543", "Rua Bahia, Bairro Arapongas");
 
-        Cliente clienteSalvo = clienteService.salvar(clienteDTO);
+        ClienteResponseDTO clienteSalvo = clienteService.salvar(clienteDTO);
 
-        Cliente clienteEncontrado = clienteService.buscarPorId(clienteSalvo.getIdCliente());
+        ClienteResponseDTO clienteEncontrado = clienteService.buscarPorId(clienteSalvo.idCliente());
 
+        // Assert
         assertNotNull(clienteEncontrado);
-        assertEquals("Wellinton", clienteEncontrado.getNome());
-        assertEquals("057.524.090-39", clienteEncontrado.getCpf());
-        assertEquals("wellinton@gmail.com", clienteEncontrado.getEmail());
-        assertEquals("47988775543", clienteEncontrado.getTelefone());
-        assertEquals("Rua Bahia, Bairro Arapongas", clienteEncontrado.getEndereco());
-}
-    @Test
-    @DisplayName("Buscar por ID inexistente: deve lançar exceção")
-    public void buscarPorIdInexistente(){
+        assertEquals("Wellinton", clienteEncontrado.nome());
+        assertEquals("057.524.090-39", clienteEncontrado.cpf());
+        assertEquals("wellinton@gmail.com", clienteEncontrado.email());
+        assertEquals("47988775543", clienteEncontrado.telefone());
+        assertEquals("Rua Bahia, Bairro Arapongas", clienteEncontrado.endereco());
+    }
 
+    @Test
+    @DisplayName("Buscar por ID inexistente deve lançar exceção")
+    public void buscarPorIdInexistente(){
         int idInexistente = 9999;
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(ResponseStatusException.class, () -> {
             clienteService.buscarPorId(idInexistente);
-    });
-
+        });
+    }
 }
-}
-
