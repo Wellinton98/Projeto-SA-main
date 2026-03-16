@@ -1,9 +1,7 @@
 package com.locacao.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,65 +14,72 @@ import com.locacao.repository.ClienteRepository;
 @Service
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
+
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
 
     public List<ClienteResponseDTO> listarTodos() {
-
-        List<ClienteResponseDTO> listaCliente = new ArrayList<>();
-
-        for (Cliente cliente : clienteRepository.findAll()) {
-            ClienteResponseDTO clienteConvertido = conversorClienteParaDto(cliente);
-            listaCliente.add(clienteConvertido);
-        }
-
-        return listaCliente;
-    }
-
-    private ClienteResponseDTO conversorClienteParaDto(Cliente cliente) {
-        return new ClienteResponseDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getCpf(), cliente.getEmail(), cliente.getTelefone(), cliente.getEndereco());
-    }
-
-    private Cliente conversorDtoParaCliente(ClienteResponseDTO clienteDto) {
-        return new Cliente(clienteDto.cpf(), clienteDto.email(), clienteDto.endereco(), clienteDto.id(), clienteDto.nome(), clienteDto.telefone());
+        return clienteRepository.findAll()
+                .stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
     public ClienteResponseDTO buscarPorId(Integer id) {
-
-        Cliente clienteBuscado = clienteRepository.findById(id)
+        Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Cliente com ID " + id + " não encontrado."));
-
-        return conversorClienteParaDto(clienteBuscado);
+                        HttpStatus.NOT_FOUND,
+                        "Cliente com ID " + id + " não encontrado"));
+        return converterParaDTO(cliente);
     }
 
-    public ClienteResponseDTO salvar(Cliente cliente2) {
+    public ClienteResponseDTO salvar(ClienteRequestDTO dto) {
         Cliente cliente = new Cliente();
-        cliente.setNome(cliente2.nome());
-        cliente.setCpf(cliente2.cpf());
-        cliente.setEmail(cliente2.email());
-        cliente.setTelefone(cliente2.telefone());
-        cliente.setEndereco(cliente2.endereco());
+        cliente.setNome(dto.nome());
+        cliente.setCpf(dto.cpf());
+        cliente.setEndereco(dto.endereco());
+        cliente.setEmail(dto.email());
+        cliente.setTelefone(dto.telefone());
 
-        Cliente clienteSalvado = clienteRepository.save(cliente);
-
-        return conversorClienteParaDto(clienteSalvado);
+        Cliente clienteSalvo = clienteRepository.save(cliente);
+        return converterParaDTO(clienteSalvo);
     }
 
     public ClienteResponseDTO atualizar(Integer id, ClienteRequestDTO dto) {
-        
-        ClienteResponseDTO clienteBuscado = buscarPorId(id);
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Cliente com ID " + id + " não encontrado"));
 
-        Cliente clienteAtualizado = clienteRepository.save(conversorDtoParaCliente(clienteBuscado));
+        cliente.setNome(dto.nome());
+        cliente.setCpf(dto.cpf());
+        cliente.setEndereco(dto.endereco());
+        cliente.setEmail(dto.email());
+        cliente.setTelefone(dto.telefone());
 
-        return conversorClienteParaDto(clienteAtualizado);
+        Cliente atualizado = clienteRepository.save(cliente);
+        return converterParaDTO(atualizado);
     }
 
     public void deletar(Integer id) {
         if (!clienteRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente com ID " + id + " não encontrado.");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Cliente com ID " + id + " não encontrado");
         }
         clienteRepository.deleteById(id);
     }
-}
 
+    private ClienteResponseDTO converterParaDTO(Cliente cliente) {
+        return new ClienteResponseDTO(
+                cliente.getIdCliente(),
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getEndereco(),
+                cliente.getEmail(),
+                cliente.getTelefone()
+        );
+    }
+}

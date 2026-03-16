@@ -1,6 +1,5 @@
 package com.locacao.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.locacao.dto.ImovelRequestDTO;
+import com.locacao.dto.ImovelResponseDTO;
 import com.locacao.model.Imovel;
 import com.locacao.repository.ImovelRepository;
 
@@ -19,45 +20,21 @@ public class ImovelService {
 
     public List<ImovelResponseDTO> listarTodos() {
 
-        List<ImovelResponseDTO> listaImoveis = new ArrayList<>();
-
-        for (Imovel imovel : imovelRepository.findAll()) {
-            ImovelResponseDTO imovelConvertido = conversorImovelParaDto(imovel);
-            listaImoveis.add(imovelConvertido);
-        }
-
-        return listaImoveis;
-    }
-
-    private ImovelResponseDTO conversorImovelParaDto(Imovel imovel) {
-        return new ImovelResponseDTO(
-                imovel.getId(),
-                imovel.getEndereco(),
-                imovel.getTipo(),
-                imovel.getValor(),
-                imovel.getFoto(),
-                imovel.getDisponivel()
-        );
-    }
-
-    private Imovel conversorDtoParaImovel(ImovelResponseDTO dto) {
-        return new Imovel(
-                dto.id(),
-                dto.endereco(),
-                dto.tipo(),
-                dto.valor(),
-                dto.foto(),
-                dto.disponivel()
-        );
+        return imovelRepository.findAll()
+                .stream()
+                .map(this::converter)
+                .toList();
     }
 
     public ImovelResponseDTO buscarPorId(Integer id) {
 
         Imovel imovel = imovelRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Imóvel com ID " + id + " não encontrado."));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Imóvel com ID " + id + " não encontrado"));
 
-        return conversorImovelParaDto(imovel);
+        return converter(imovel);
     }
 
     public ImovelResponseDTO salvar(ImovelRequestDTO dto) {
@@ -66,30 +43,19 @@ public class ImovelService {
 
         imovel.setEndereco(dto.endereco());
         imovel.setTipo(dto.tipo());
-        imovel.setValor(dto.valor());
-        imovel.setFoto(dto.foto());
+        imovel.setQuartos(dto.quartos());
+        imovel.setBanheiros(dto.banheiros());
+        imovel.setVagas(dto.vagas());
+        imovel.setMobilia(dto.mobilia());
         imovel.setDisponivel(dto.disponivel());
-
-        Imovel imovelSalvo = imovelRepository.save(imovel);
-
-        return conversorImovelParaDto(imovelSalvo);
-    }
-
-    public ImovelResponseDTO atualizar(Integer id, ImovelRequestDTO dto) {
-
-        Imovel imovel = imovelRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Imóvel com ID " + id + " não encontrado."));
-
-        imovel.setEndereco(dto.endereco());
-        imovel.setTipo(dto.tipo());
-        imovel.setValor(dto.valor());
+        imovel.setDescricao(dto.descricao());
+        imovel.setValorAluguel(dto.valorAluguel());
         imovel.setFoto(dto.foto());
-        imovel.setDisponivel(dto.disponivel());
+        imovel.setNegocio(dto.negocio());
 
-        Imovel imovelAtualizado = imovelRepository.save(imovel);
+        Imovel salvo = imovelRepository.save(imovel);
 
-        return conversorImovelParaDto(imovelAtualizado);
+        return converter(salvo);
     }
 
     public void deletar(Integer id) {
@@ -97,25 +63,27 @@ public class ImovelService {
         if (!imovelRepository.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Imóvel com ID " + id + " não encontrado."
-            );
+                    "Imóvel não encontrado");
         }
 
         imovelRepository.deleteById(id);
     }
 
-    public List<ImovelResponseDTO> listarDisponiveis() {
+    private ImovelResponseDTO converter(Imovel imovel) {
 
-        List<ImovelResponseDTO> lista = new ArrayList<>();
-
-        for (Imovel imovel : imovelRepository.findByDisponivelTrue()) {
-            lista.add(conversorImovelParaDto(imovel));
-        }
-
-        return lista;
-    }
-
-    public void excluir(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new ImovelResponseDTO(
+                imovel.getIdImovel(),
+                imovel.getEndereco(),
+                imovel.getTipo(),
+                imovel.getQuartos(),
+                imovel.getBanheiros(),
+                imovel.getVagas(),
+                imovel.getMobilia(),
+                imovel.getDisponivel(),
+                imovel.getDescricao(),
+                imovel.getValorAluguel(),
+                imovel.getFoto(),
+                imovel.getNegocio()
+        );
     }
 }

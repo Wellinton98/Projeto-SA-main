@@ -2,25 +2,24 @@ package com.locacao.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
+@Table(name = "aluguel")
 public class Aluguel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAluguel;
 
+    @NotNull
     private LocalDate dataInicio;
+
+    @NotNull
     private LocalDate dataFim;
 
+    @DecimalMin("0.00")
     @Column(precision = 10, scale = 2)
     private BigDecimal valorMensal;
 
@@ -35,6 +34,7 @@ public class Aluguel {
     @Column(length = 150)
     private String cpfFiador;
 
+    @DecimalMin("0.00")
     @Column(precision = 10, scale = 2)
     private BigDecimal valorSeguroIncendio;
 
@@ -48,30 +48,29 @@ public class Aluguel {
 
     public Aluguel() {}
 
-    // GETTERS
-    public Integer getIdAluguel() { return idAluguel; }
-    public LocalDate getDataInicio() { return dataInicio; }
-    public LocalDate getDataFim() { return dataFim; }
-    public BigDecimal getValorMensal() { return valorMensal; }
-    public Boolean getSeguroIncendio() { return seguroIncendio; }
-    public String getContratoAluguel() { return contratoAluguel; }
-    public String getNomeFiador() { return nomeFiador; }
-    public String getCpfFiador() { return cpfFiador; }
-    public BigDecimal getValorSeguroIncendio() { return valorSeguroIncendio; }
-    public Cliente getCliente() { return cliente; }
-    public Imovel getImovel() { return imovel; }
+    // Getters e Setters
+    // ...
 
-    // SETTERS
-    public void setIdAluguel(Integer idAluguel) { this.idAluguel = idAluguel; }
-    public void setDataInicio(LocalDate dataInicio) { this.dataInicio = dataInicio; }
-    public void setDataFim(LocalDate dataFim) { this.dataFim = dataFim; }
-    public void setValorMensal(BigDecimal valorMensal) { this.valorMensal = valorMensal; }
-    public void setSeguroIncendio(Boolean seguroIncendio) { this.seguroIncendio = seguroIncendio; }
-    public void setContratoAluguel(String contratoAluguel) { this.contratoAluguel = contratoAluguel; }
-    public void setNomeFiador(String nomeFiador) { this.nomeFiador = nomeFiador; }
-    public void setCpfFiador(String cpfFiador) { this.cpfFiador = cpfFiador; }
-    public void setValorSeguroIncendio(BigDecimal valorSeguroIncendio) { this.valorSeguroIncendio = valorSeguroIncendio; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
-    public void setImovel(Imovel imovel) { this.imovel = imovel; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Aluguel)) return false;
+        Aluguel aluguel = (Aluguel) o;
+        return idAluguel != null && idAluguel.equals(aluguel.idAluguel);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Aluguel{" +
+                "id=" + idAluguel +
+                ", cliente=" + cliente +
+                ", imovel=" + imovel +
+                ", valorMensal=" + valorMensal +
+                '}';
+    }
 }
-

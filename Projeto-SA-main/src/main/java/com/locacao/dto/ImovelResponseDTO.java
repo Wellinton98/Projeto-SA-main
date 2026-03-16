@@ -2,8 +2,9 @@ package com.locacao.dto;
 
 import java.math.BigDecimal;
 
-public record ImovelRequestDTO(
+public record ImovelResponseDTO(
 
+    Integer id,
     String endereco,
     String tipo,
     Short quartos,

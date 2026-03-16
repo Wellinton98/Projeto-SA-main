@@ -1,5 +1,7 @@
 package com.locacao.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,24 +21,15 @@ public class Imovel {
     private Short quartos;
     private Short banheiros;
     private Short vagas;
+
     private Boolean mobilia;
     private Boolean disponivel;
+
     private String descricao;
-    private String valorAluguel;
+
+    private BigDecimal valorAluguel;
+
     private String foto;
 
-    private String negocio; // ✅ Alugar ou Comprar
-
-    @Override
-    public String toString() {
-        return "Imovel [idImovel=" + idImovel + ", endereco=" + endereco + ", tipo=" + tipo + ", quartos=" + quartos
-                + ", banheiros=" + banheiros + ", vagas=" + vagas + ", mobilia=" + mobilia + ", disponivel="
-                + disponivel + ", descricao=" + descricao + ", valorAluguel=" + valorAluguel + ", foto=" + foto
-                + ", negocio=" + negocio + "]";
-    }
-
-    public Object getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
-    }
+    private String negocio; // Alugar ou Comprar
 }

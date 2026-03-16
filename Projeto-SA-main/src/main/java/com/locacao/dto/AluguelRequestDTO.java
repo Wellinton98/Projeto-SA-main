@@ -1,18 +1,17 @@
 package com.locacao.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record AluguelRequestDTO(
-    Integer idAluguel,
-    Long idCliente,
-    Long idImovel,
-    String dataInicio,
-    BigDecimal valorMensal,
-    Boolean seguroIncendio,
-    String contratoAluguel,
-    String nomeFiado,
-    String cpfFiador,
-    BigDecimal valorSeguroIncendio,
-    String dataFim
-
+        Integer idCliente,
+        Integer idImovel,
+        LocalDate dataInicio,
+        LocalDate dataFim,
+        BigDecimal valorMensal,
+        Boolean seguroIncendio,
+        String contratoAluguel,
+        String nomeFiador,
+        String cpfFiador,
+        BigDecimal valorSeguroIncendio
 ) {}

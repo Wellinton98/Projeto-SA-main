@@ -1,10 +1,10 @@
 package com.locacao.dto;
 
 public record ClienteResponseDTO(
-    Integer id,
-    String nome,
-    String cpf,
-    String email,
-    String telefone,
-    String endereco
+        Integer idCliente,
+        String nome,
+        String cpf,
+        String endereco,
+        String email,
+        String telefone
 ) {}
