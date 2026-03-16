@@ -1,14 +1,19 @@
 package com.locacao.unitario;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.locacao.dto.ClienteRequestDTO;
 import com.locacao.model.Cliente;
@@ -53,50 +58,36 @@ class ClienteServicetest {
         assertEquals("Rua A, 123", resultado.getEndereco()); // Verifica o endereço
         assertEquals("joao@gmail.com", resultado.getEmail()); // Verifica o email
         assertEquals("11999999999", resultado.getTelefone()); // Verifica o telefone
-
-        // Verifica se o repositório foi chamado corretamente
- //   verify(clienteRepository, times(1)).save(cliente);    
-
-}
-/* 
-   @Test
-    void deveLancarExcecao_QuandoBuscarPorIdInexistente() {
-
-        Integer idInexistente = 999; // ID que não existe no banco de dados
-
-        Mockito.when(clienteRepository.findById(idInexistente))
-                .thenReturn(Optional.empty());// Simula que o cliente não foi salvo
-
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            clienteService.buscarPorId(idInexistente);// Chama o service
-        });
-
-        assertEquals("Cliente com ID 999 não encontrado.", exception.getMessage());
-        Mockito.verify(clienteRepository).findById(idInexistente);// Verifica se o repositorio foi chamado
     }
+
+  @Test
+void deveLancarExcecao_QuandoBuscarPorIdInexistente() {
+
+    Integer idInexistente = 999;
+
+    Mockito.when(clienteRepository.findById(idInexistente))
+            .thenReturn(Optional.empty());
+
+    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        clienteService.buscarPorId(idInexistente);
+    });
+
+    assertEquals("Cliente com ID 999 não encontrado.", exception.getReason());
+
+    Mockito.verify(clienteRepository).findById(idInexistente);
+}
 
     @Test
     void deveDeletarClienteDoSistema() {
 
-        Integer idExistente = 1; // ID que existe no banco de dados
+        Integer idExistente = 1;
 
-        // cliente existente no "banco"
-        Cliente clienteExistente = new Cliente();//
-        clienteExistente.setIdCliente(idExistente);
-        clienteExistente.setNome("Maria Souza");
-        clienteExistente.setCpf("98765432100");
-        clienteExistente.setEndereco("Rua B, 456");
-        clienteExistente.setEmail("maria123@gmail.com");
-        clienteExistente.setTelefone("11988888888");
+        Mockito.when(clienteRepository.existsById(idExistente))
+                .thenReturn(true);
 
-        Mockito.when(clienteRepository.findById(idExistente))
-                .thenReturn(Optional.of(clienteExistente));// Simula que o cliente foi encontrado
-
-        // chamar o service
         clienteService.deletar(idExistente);
 
-        // garantir que o repositório foi chamado corretamente
         Mockito.verify(clienteRepository, Mockito.times(1))
-                .deleteById(idExistente);// Verifica se o deleteByid foi chmado corretamente
-    }*/
+                .deleteById(idExistente);
+}
 }

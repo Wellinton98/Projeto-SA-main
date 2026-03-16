@@ -1,11 +1,12 @@
 package com.locacao.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.locacao.dto.AluguelRequestDTO;
+import com.locacao.dto.AluguelResponseDTO;
 import com.locacao.model.Aluguel;
 import com.locacao.repository.AluguelRepository;
 
@@ -15,34 +16,44 @@ public class AluguelService {
     @Autowired
     private AluguelRepository aluguelRepository;
 
-    public Aluguel salvar(Aluguel aluguel) {
+    public Aluguel salvar(AluguelRequestDTO dto) {
+
+        Aluguel aluguel = new Aluguel();
+
+        aluguel.setDataInicio(dto.dataInicio());
+        aluguel.setDataFim(dto.dataFim());
+        aluguel.setValorMensal(dto.valorMensal());
+
         return aluguelRepository.save(aluguel);
     }
 
-    public List<Aluguel> listarAlugueisPorImovel(Integer idImovel) {
-        return aluguelRepository.findByImovelIdImovel(idImovel);
+    public List<AluguelResponseDTO> listarTodos() {
+        return aluguelRepository.findAll()
+                .stream()
+                .map(aluguel -> new AluguelResponseDTO(
+                        aluguel.getIdAluguel(),
+                        aluguel.getCliente().getNome(),
+                        aluguel.getImovel().getEndereco(),
+                        aluguel.getDataInicio(),
+                        aluguel.getDataFim(),
+                        aluguel.getValorMensal()))
+                .toList();
     }
 
-    public boolean imovelDisponivel(Integer imovelId, LocalDate inicio, LocalDate fim) {
+    public AluguelResponseDTO buscarPorId(Integer id) {
 
-        List<Aluguel> conflitos = aluguelRepository.verificarDisponibilidade(imovelId, inicio, fim);
+        Aluguel aluguel = aluguelRepository.findById(id).orElseThrow();
 
-        return conflitos.isEmpty(); // se não tem conflito, está disponível
-    }
-
-    public List<Aluguel> listarTodos() {
-        return aluguelRepository.findAll();
-    }
-    public Aluguel imovelNaoEncontrado(Integer id) {
-        return aluguelRepository.findById(id).orElse(null);
-    }
-
-    public Aluguel buscarPorId(Integer id) {
-        return aluguelRepository.findById(id).orElse(null);
+        return new AluguelResponseDTO(
+                aluguel.getIdAluguel(),
+                aluguel.getCliente().getNome(),
+                aluguel.getImovel().getEndereco(),
+                aluguel.getDataInicio(),
+                aluguel.getDataFim(),
+                aluguel.getValorMensal());
     }
 
     public void deletar(Integer id) {
         aluguelRepository.deleteById(id);
     }
 }
-

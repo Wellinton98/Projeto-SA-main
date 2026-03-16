@@ -39,3 +39,4 @@ public class ClienteServiceIntegrationTest {
         assertFalse(clientes.isEmpty());
     }
 }
+
