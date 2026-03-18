@@ -25,7 +25,7 @@ public class AluguelController {
 
     // Criar novo aluguel
     @PostMapping
-    public AluguelResponseDTO salvar(@RequestBody AluguelRequestDTO dto) {
+    public AluguelResponseDTO salvar(@Valid @RequestBody AluguelRequestDTO dto) {
         return aluguelService.salvar(dto);
     }
 
@@ -37,19 +37,19 @@ public class AluguelController {
 
     // Buscar aluguel por ID
     @GetMapping("/{id}")
-    public AluguelResponseDTO buscarPorId(@PathVariable Integer id) {
+    public AluguelResponseDTO buscarPorId(@Valid @PathVariable Integer id) {
         return aluguelService.buscarPorId(id);
     }
 
     // Atualizar aluguel existente
     @PutMapping("/{id}")
-    public AluguelResponseDTO atualizar(@PathVariable Integer id, @RequestBody AluguelRequestDTO dto) {
+    public AluguelResponseDTO atualizar(@Valid @PathVariable Integer id, @RequestBody AluguelRequestDTO dto) {
         return aluguelService.atualizar(id, dto);
     }
 
     // Deletar aluguel por ID
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Integer id) {
+    public void deletar(@Valid @PathVariable Integer id) {
         aluguelService.deletar(id);
     }
 }

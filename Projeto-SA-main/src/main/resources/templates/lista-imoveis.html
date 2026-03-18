@@ -49,7 +49,7 @@
                 <p th:if="${!imovel.disponivel}" style="color: red;">
                     Indisponível
                 </p>
-                <a th:href="@{/imoveis/excluir/{id}(id=${imovel.idImovel})}"
+                <a th:href="@{/imoveis/excluir/{id}(id=${idImovel})}"
    class="btn-excluir"
    onclick="return confirm('Tem certeza que deseja excluir?')">
    ❌ Excluir

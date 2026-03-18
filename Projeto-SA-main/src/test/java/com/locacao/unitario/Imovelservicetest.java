@@ -4,16 +4,17 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.locacao.dto.ImovelResponseDTO;
 import com.locacao.model.Imovel;
 import com.locacao.repository.ImovelRepository;
 import com.locacao.service.ImovelService;
@@ -32,50 +33,37 @@ public class Imovelservicetest {
     }
 
     @Test
+    @DisplayName("Buscar por ID e retornar corretamente")
     void testBuscarPorIdRetornoCorreto() {
 
-        
-        Integer id = 1;// ID do imovel a ser buscado
+        // Arrange
+        Imovel imovel = new Imovel();
+        imovel.setIdImovel(1);
+        imovel.setEndereco("Rua A");
 
-        Imovel imovel = new Imovel();// Criando o imóvel mockado
-        imovel.setIdImovel(id); // Definido o id por imovel
-        imovel.setEndereco("Rua A");// Definindo o endereço
-        imovel.setTipo("Casa");// Definindo o tipo da casa
-        imovel.setDescricao("Casa para alugar");// Definindo a descrição do imovel 
-        imovel.setDisponivel(true);// Definindo a disponibilidade do imovel
+        when(imovelRepository.findById(1)).thenReturn(Optional.of(imovel));
 
-        when(imovelRepository.findById(id))
-                .thenReturn(Optional.of(imovel));
-
-        // chamando o service
-        Imovel resultado = imovelService.buscarPorId(id);
+        // Act
+        ImovelResponseDTO resultado = imovelService.buscarPorId(1);
 
         // Assert
         assertNotNull(resultado);
-        assertEquals(id, resultado.getIdImovel());
-        assertEquals("Casa para alugar", resultado.getDescricao());
-        assertTrue(resultado.getDisponivel());
+        assertEquals(1, resultado.id());
+        assertEquals("Rua A", resultado.endereco());
+}
 
-        verify(imovelRepository, times(1)).findById(id);
-    }
-
-     @Test
+    @Test
+    @DisplayName("Buscar por ID inexistente deve lançar exceção")
     void testBuscarPorIdInexistenteDeveLancarExcecao() {
 
-        Integer id = 999; // ID que não existe
+        // Arrange
+        when(imovelRepository.findById(99)).thenReturn(Optional.empty());
 
-        when(imovelRepository.findById(id))
-                .thenReturn(Optional.empty()); // O repositório não encontrou nada
-
-        
-        Imovel resultado = imovelService.buscarPorId(id); //Chama o service
-        assertEquals(null, resultado
-        );
-
-        // Verifica se o repository foi chamado uma vez
-        verify(imovelRepository, times(1)).findById(id);
+        // Act + Assert
+        assertThrows(ResponseStatusException.class, () -> {
+            imovelService.buscarPorId(99);
+        });
     }
-
 }
 
 

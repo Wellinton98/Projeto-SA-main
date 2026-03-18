@@ -1,5 +1,6 @@
 package com.locacao.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,12 @@ public class AluguelService {
 
         return converter(aluguel);
     }
+  
+
+public boolean imovelDisponivel(Integer imovelId, LocalDate inicio, LocalDate fim) {
+   
+    return true;
+}
 
     // Deletar aluguel por ID
     public void deletar(Integer id) {

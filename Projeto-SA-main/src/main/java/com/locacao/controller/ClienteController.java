@@ -33,25 +33,25 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> buscar(@PathVariable Integer id) {
+    public ResponseEntity<ClienteResponseDTO> buscar(@Valid @PathVariable Integer id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> salvar( @RequestBody ClienteRequestDTO dto) {
+    public ResponseEntity<ClienteResponseDTO> salvar(@Valid @RequestBody ClienteRequestDTO dto) {
         ClienteResponseDTO response = clienteService.salvar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> atualizar(@PathVariable Integer id,
+    public ResponseEntity<ClienteResponseDTO> atualizar(@Valid @PathVariable Integer id,
                                                          @RequestBody ClienteRequestDTO dto) {
         ClienteResponseDTO response = clienteService.atualizar(id, dto);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@Valid @PathVariable Integer id) {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
