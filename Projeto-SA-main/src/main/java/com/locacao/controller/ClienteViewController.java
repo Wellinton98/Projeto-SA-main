@@ -20,7 +20,6 @@ public class ClienteViewController {
 
     @GetMapping("/novo")
     public String novoCliente() {
-        System.out.println("CHEGOU NO CONTROLLER");
         return "cliente-form";
     }
 

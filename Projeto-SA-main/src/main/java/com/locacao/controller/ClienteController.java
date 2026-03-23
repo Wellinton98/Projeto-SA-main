@@ -37,7 +37,7 @@ public class ClienteController {
 
     // buscar os clinetes por ids
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> buscar(@PathVariable Integer id) {
+    public ResponseEntity<ClienteResponseDTO> buscar(@Valid @PathVariable Integer id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 
@@ -50,7 +50,7 @@ public class ClienteController {
 
     // atualizar os clientes
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> atualizar(@PathVariable Integer id,
+    public ResponseEntity<ClienteResponseDTO> atualizar(@Valid @PathVariable Integer id,
                                                          @Valid @RequestBody ClienteRequestDTO dto) {
         ClienteResponseDTO response = clienteService.atualizar(id, dto);
         return ResponseEntity.ok(response);
@@ -62,4 +62,5 @@ public class ClienteController {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+    
 }

@@ -12,15 +12,14 @@
     <tr>
         <th>ID</th>
         <th>Nome</th>
-        <th>CPF</th>
+        <th>Email</th>
     </tr>
 
-    <tr th:each="cliente : ${clientes}">
-        <td th:text="${cliente.idCliente}"></td>
-        <td th:text="${cliente.nome}"></td>
-        <td th:text="${cliente.cpf}"></td>
+    <tr th:each="c : ${clientes}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.nome}"></td>
+        <td th:text="${c.email}"></td>
     </tr>
-
 </table>
 
 </body>
