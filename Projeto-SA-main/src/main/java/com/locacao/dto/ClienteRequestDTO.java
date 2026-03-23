@@ -6,7 +6,7 @@ public record ClienteRequestDTO(
     @NotBlank(message = "Nome é obrigatório")
     String nome,
 
-    @NotBlank(message = " Cdf é  obriogatorio")
+    @NotBlank(message = " Cpf é  obriogatorio")
     String cpf,
 
     @NotBlank(message = "email é obrigatorio")
