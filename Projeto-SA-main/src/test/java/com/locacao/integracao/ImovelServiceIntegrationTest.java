@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,18 @@ public void deveSalvarEBuscar() {
     assertNotNull(encontrado);
     assertEquals("Rua Teste", encontrado.endereco());
     assertEquals("Casa", encontrado.tipo());
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar imóvel com ID inexistente")
+    public void deveLançarExcecaoAoBuscarIdInexistente() {
+ 
+    Integer idInexistente = 999; 
+
+    assertThrows(RuntimeException.class, () -> {
+        imovelService.buscarPorId(idInexistente);
+    });
 }
+
+
 }

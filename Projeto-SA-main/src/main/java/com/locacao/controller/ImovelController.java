@@ -57,7 +57,7 @@ public class ImovelController {
         return "lista-imoveis";
     }
 
-    @GetMapping("/excluir/{id}")
+     @GetMapping("/excluir/{id}")
     public String excluir(@PathVariable Integer id) {
         imovelService.deletar(id);
         return "redirect:/imoveis";

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public record ImovelRequestDTO(
 
+    
     String endereco,
     String tipo,
     Short quartos,

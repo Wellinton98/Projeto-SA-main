@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Cadastro de Cliente</title>
+</head>
+<body>
+
+<div class="container">
+    
+    <a th:href="@{/}" class="btn-voltar">⬅ Início</a>
+    
+    <h1>Cadastrar Cliente</h1>
+
+    <!-- Mensagens -->
+    <div th:if="${param.sucesso}" class="sucesso">
+        Cliente cadastrado com sucesso!
+    </div>
+
+    <div th:if="${param.erro}" class="erro">
+        Erro ao cadastrar cliente (CPF já existente)
+    </div>
+
+    <!-- Formulário -->
+    <form action="/cliente/salvar" method="post">
+        
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
+
+        <label>CPF:</label>
+        <input type="text" name="cpf" required>
+
+        <label>Endereço:</label>
+        <input type="text" name="endereco">
+
+        <label>Email:</label>
+        <input type="email" name="email">
+
+        <label>Telefone:</label>
+        <input type="text" name="telefone">
+
+        <button type="submit">Salvar</button>
+    </form>
+
+</div>
+
+</body>
+</html>

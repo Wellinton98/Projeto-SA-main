@@ -9,5 +9,6 @@ import com.locacao.model.Cliente;
         Optional<Cliente> findById(Integer id_cliente);
 
         boolean existsById(Integer id_cliente);
+        boolean existsByCpf(String cpf);
     
 }
