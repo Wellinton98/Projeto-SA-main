@@ -19,6 +19,7 @@ public class ClienteService {
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
+    
 
     public List<ClienteResponseDTO> listarTodos() {
         return clienteRepository.findAll()
@@ -36,16 +37,23 @@ public class ClienteService {
     }
 
     public ClienteResponseDTO salvar(ClienteRequestDTO dto) {
-        Cliente cliente = new Cliente();
-        cliente.setNome(dto.nome());
-        cliente.setCpf(dto.cpf());
-        cliente.setEndereco(dto.endereco());
-        cliente.setEmail(dto.email());
-        cliente.setTelefone(dto.telefone());
 
-        Cliente clienteSalvo = clienteRepository.save(cliente);
-        return converterParaDTO(clienteSalvo);
+    String cpfLimpo = dto.cpf().replaceAll("[^0-9]", "");
+
+    if (clienteRepository.existsByCpf(cpfLimpo)) {
+        throw new RuntimeException("CPF já cadastrado!");
     }
+
+    Cliente cliente = new Cliente();
+    cliente.setNome(dto.nome());
+    cliente.setCpf(cpfLimpo);
+    cliente.setEndereco(dto.endereco());
+    cliente.setEmail(dto.email());
+    cliente.setTelefone(dto.telefone());
+
+    Cliente clienteSalvo = clienteRepository.save(cliente);
+    return converterParaDTO(clienteSalvo);
+}
 
     public ClienteResponseDTO atualizar(Integer id, ClienteRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id)
@@ -81,5 +89,6 @@ public class ClienteService {
                 cliente.getEmail(),
                 cliente.getTelefone()
         );
+        
     }
 }

@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 
 @SpringBootTest
 @Transactional
+// onde é feita a transação com banco de dados, limpado a cada teste.
 public class ClienteServiceIntegrationTest {
 
     @Autowired

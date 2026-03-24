@@ -12,6 +12,8 @@ import com.locacao.dto.AluguelRequestDTO;
 import com.locacao.dto.AluguelResponseDTO;
 import com.locacao.model.Aluguel;
 import com.locacao.repository.AluguelRepository;
+import com.locacao.repository.ClienteRepository;
+import com.locacao.repository.ImovelRepository;
 
 @Service
 public class AluguelService {
@@ -22,16 +24,37 @@ public class AluguelService {
     @Autowired
     private AluguelRepository aluguelRepository;
 
+    @Autowired
+    private ImovelRepository imovelRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     // Salvar um novo aluguel
     public AluguelResponseDTO salvar(AluguelRequestDTO dto) {
 
+        var cliente = clienteRepository.findById(dto.idCliente())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        var imovel = imovelRepository.findById(dto.idImovel())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Imóvel não encontrado"));
+
         Aluguel aluguel = new Aluguel();
+        aluguel.setCliente(cliente); // 🔥 corrigido
+        aluguel.setImovel(imovel);   // 🔥 corrigido
+
         aluguel.setDataInicio(dto.dataInicio());
         aluguel.setDataFim(dto.dataFim());
         aluguel.setValorMensal(dto.valorMensal());
+        aluguel.setSeguroIncendio(dto.seguroIncendio());
+        aluguel.setNomeFiador(dto.nomeFiador());
+        aluguel.setCpfFiador(dto.cpfFiador());
+        aluguel.setValorSeguroIncendio(dto.valorSeguroIncendio());
+        aluguel.setContratoAluguel(dto.contratoAluguel());
 
         Aluguel salvo = aluguelRepository.save(aluguel);
-
         return converter(salvo);
     }
 
@@ -47,19 +70,16 @@ public class AluguelService {
     public AluguelResponseDTO buscarPorId(Integer id) {
 
         Aluguel aluguel = aluguelRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Aluguel com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aluguel com ID " + id + " não encontrado"));
 
         return converter(aluguel);
     }
-  
 
-public boolean imovelDisponivel(Integer imovelId, LocalDate inicio, LocalDate fim) {
-   
-    return true;
-}
+    public boolean imovelDisponivel(Integer imovelId, LocalDate inicio, LocalDate fim) {
+        return true;
+    }
 
     // Deletar aluguel por ID
     public void deletar(Integer id) {
@@ -87,6 +107,7 @@ public boolean imovelDisponivel(Integer imovelId, LocalDate inicio, LocalDate fi
                 aluguel.getValorMensal()
         );
     }
+
     public AluguelResponseDTO atualizar(Integer id, AluguelRequestDTO dto) {
 
         Aluguel aluguelExistente = aluguelRepository.findById(id)
@@ -94,7 +115,15 @@ public boolean imovelDisponivel(Integer imovelId, LocalDate inicio, LocalDate fi
                         HttpStatus.NOT_FOUND,
                         "Aluguel com ID " + id + " não encontrado"));
 
-      
+        aluguelExistente.setDataInicio(dto.dataInicio());
+        aluguelExistente.setDataFim(dto.dataFim());
+        aluguelExistente.setValorMensal(dto.valorMensal());
+        aluguelExistente.setSeguroIncendio(dto.seguroIncendio());
+        aluguelExistente.setNomeFiador(dto.nomeFiador());
+        aluguelExistente.setCpfFiador(dto.cpfFiador());
+        aluguelExistente.setValorSeguroIncendio(dto.valorSeguroIncendio());
+        aluguelExistente.setContratoAluguel(dto.contratoAluguel());
+
         Aluguel atualizado = aluguelRepository.save(aluguelExistente);
         return converter(atualizado);
     }

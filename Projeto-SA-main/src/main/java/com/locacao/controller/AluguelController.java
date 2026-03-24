@@ -3,6 +3,8 @@ package com.locacao.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,14 @@ public class AluguelController {
     public AluguelResponseDTO salvar(@Valid @RequestBody AluguelRequestDTO dto) {
         return aluguelService.salvar(dto);
     }
+    @GetMapping("/novo")
+public String novoAluguel(Model model) {
+    model.addAttribute("aluguel", new AluguelRequestDTO(
+        null, null, null, null,
+        null, null, null, null, null, null
+    ));
+    return "cadastro-aluguel";
+}
 
     // Listar todos os alugueis
     @GetMapping
@@ -49,7 +59,9 @@ public class AluguelController {
 
     // Deletar aluguel por ID
     @DeleteMapping("/{id}")
-    public void deletar(@Valid @PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         aluguelService.deletar(id);
+        return ResponseEntity.noContent().build();
+    
     }
 }

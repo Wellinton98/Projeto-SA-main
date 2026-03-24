@@ -1,12 +1,14 @@
 package com.locacao.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.processing.Pattern;
-
-public record AluguelRequestDTO(
+   public record AluguelRequestDTO(
 
     @NotNull
     Integer idCliente,
@@ -29,10 +31,10 @@ public record AluguelRequestDTO(
 
     String contratoAluguel,
 
-    @Size
+    @Size(max = 100)
     String nomeFiador,
 
-    @Pattern
+    @Pattern(regexp = "\\d{11}")
     String cpfFiador,
 
     @Positive

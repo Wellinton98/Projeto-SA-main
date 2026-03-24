@@ -17,6 +17,8 @@ import com.locacao.dto.ClienteRequestDTO;
 import com.locacao.dto.ClienteResponseDTO;
 import com.locacao.service.ClienteService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -27,32 +29,38 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
+    // listar os clientes
     @GetMapping
     public ResponseEntity<List<ClienteResponseDTO>> listar() {
         return ResponseEntity.ok(clienteService.listarTodos());
     }
 
+    // buscar os clinetes por ids
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> buscar(@Valid @PathVariable Integer id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 
+    // criar clientes
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> salvar(@Valid @RequestBody ClienteRequestDTO dto) {
         ClienteResponseDTO response = clienteService.salvar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // atualizar os clientes
     @PutMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> atualizar(@Valid @PathVariable Integer id,
-                                                         @RequestBody ClienteRequestDTO dto) {
+                                                         @Valid @RequestBody ClienteRequestDTO dto) {
         ClienteResponseDTO response = clienteService.atualizar(id, dto);
         return ResponseEntity.ok(response);
     }
 
+    // deletar os clientes
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@Valid @PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+    
 }

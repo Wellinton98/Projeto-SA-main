@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.antlr.v4.runtime.misc.NotNull;
 
 public record ImovelRequestDTO(
-    @NotNull
+
     String endereco,
 
     @NotNull
