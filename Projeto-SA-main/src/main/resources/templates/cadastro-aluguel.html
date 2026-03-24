@@ -8,49 +8,70 @@
 <body>
 
 <div class="container">
+
     <h1>🏠 Cadastrar Aluguel</h1>
+
+    
+<div id="msgSucesso" th:if="${sucesso}" class="alert-success">
+    <p th:text="${sucesso}"></p>
+</div>
+
+<div id="msgErro" th:if="${erro}" class="alert-error">
+    <p th:text="${erro}"></p>
+</div>
+
+    <a th:href="@{/}" class="btn-voltar">⬅ Início</a>
 
     <form th:action="@{/alugueis/salvar}" method="post">
 
+        <!-- CLIENTE -->
         <label>Cliente (ID):</label>
         <input type="number" name="idCliente" required>
 
+        <!-- IMÓVEL -->
         <label>Imóvel (ID):</label>
         <input type="number" name="idImovel" required>
 
+        <!-- DATAS -->
         <label>Data Início:</label>
         <input type="date" name="dataInicio" required>
 
         <label>Data Fim:</label>
         <input type="date" name="dataFim" required>
 
+        <!-- VALOR -->
         <label>Valor Mensal:</label>
         <input type="number" step="0.01" name="valorMensal" required>
 
+        <!-- SEGURO -->
         <label>Seguro Incêndio:</label>
-        <select name="seguroIncendio">
+        <select name="seguroIncendio" required>
             <option value="true">Sim</option>
             <option value="false">Não</option>
         </select>
 
+        <!-- FIADOR -->
         <label>Nome do Fiador:</label>
         <input type="text" name="nomeFiador">
 
         <label>CPF do Fiador:</label>
-        <input type="text" name="cpfFiador">
+        <input type="text" name="cpfFiador" pattern="\d{11}" placeholder="Somente números">
 
+        <!-- VALOR SEGURO -->
         <label>Valor Seguro Incêndio:</label>
         <input type="number" step="0.01" name="valorSeguroIncendio">
 
+        <!-- CONTRATO -->
         <label>Contrato:</label>
         <input type="text" name="contratoAluguel">
 
         <br><br>
 
         <button type="submit">Salvar Aluguel</button>
-        <a th:href="@{/}" class="btn-voltar">Voltar</a>
-
+        <div th:if="${sucesso}" class="alert-success">
+        <div th:if="${erro}" class="alert-error">    
     </form>
+
 </div>
 
 </body>

@@ -3,24 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de Clientes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        .alert-success {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .alert-error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Clientes</h1>
+<div class="container">
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Email</th>
-    </tr>
+    <h1>📋 Lista de Clientes</h1>
 
-    <tr th:each="c : ${clientes}">
-        <td th:text="${c.id}"></td>
-        <td th:text="${c.nome}"></td>
-        <td th:text="${c.email}"></td>
-    </tr>
-</table>
+    <!-- MENSAGEM -->
+    <div id="mensagem">
+
+        <div th:if="${sucesso}" class="alert-success">
+            <p th:text="${sucesso}"></p>
+        </div>
+
+        <div th:if="${erro}" class="alert-error">
+            <p th:text="${erro}"></p>
+        </div>
+
+    </div>
+
+    <a th:href="@{/}" class="btn-voltar">⬅ Início</a>
+
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="cliente : ${clientes}">
+                <td th:text="${cliente.id}"></td>
+                <td th:text="${cliente.nome}"></td>
+                <td th:text="${cliente.cpf}"></td>
+                <td th:text="${cliente.email}"></td>
+                <td th:text="${cliente.telefone}"></td>
+
+                <td>
+                    <a th:href="@{/clientes/deletar/{id}(id=${cliente.id})}"
+                       onclick="return confirm('Tem certeza que deseja deletar?')">
+                       ❌ Deletar
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- ⏳ SCRIPT: mensagem some sozinha -->
+<script>
+    setTimeout(function() {
+        var msg = document.getElementById("mensagem");
+        if (msg) {
+            msg.style.display = "none";
+        }
+    }, 3000); // 3 segundos
+</script>
 
 </body>
 </html>

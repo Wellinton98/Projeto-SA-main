@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,32 +12,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.locacao.dto.AluguelRequestDTO;
 import com.locacao.dto.AluguelResponseDTO;
 import com.locacao.service.AluguelService;
 
-@RestController
+@Controller
 @RequestMapping("/alugueis")
 public class AluguelController {
 
     @Autowired
     private AluguelService aluguelService;
+    @Autowired
+    AluguelService clienteService;
+    @Autowired
+    AluguelService imovelService;
 
     // Criar novo aluguel
     @PostMapping
     public AluguelResponseDTO salvar(@Valid @RequestBody AluguelRequestDTO dto) {
         return aluguelService.salvar(dto);
     }
-    @GetMapping("/novo")
-public String novoAluguel(Model model) {
-    model.addAttribute("aluguel", new AluguelRequestDTO(
-        null, null, null, null,
-        null, null, null, null, null, null
-    ));
-    return "cadastro-aluguel";
-}
+   
 
     // Listar todos os alugueis
     @GetMapping
@@ -64,4 +61,20 @@ public String novoAluguel(Model model) {
         return ResponseEntity.noContent().build();
     
     }
+
+    @PostMapping("/salvar")
+    public String salvarAluguel(AluguelRequestDTO dto, RedirectAttributes redirectAttributes) {
+
+    try {
+        aluguelService.salvar(dto);
+
+        redirectAttributes.addFlashAttribute("sucesso", "Aluguel salvo com sucesso!");
+
+    } catch (Exception e) {
+
+        redirectAttributes.addFlashAttribute("erro", "Erro ao salvar aluguel: " + e.getMessage());
+    }
+
+    return "redirect:/alugueis/novo";
+}
 }
